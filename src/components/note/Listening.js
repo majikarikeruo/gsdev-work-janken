@@ -44,7 +44,6 @@ const Listening = () => {
   const stopRecording = () => {
     setIsRecording(false);
     SpeechRecognition.stopListening();
-    console.log(transcript);
   };
 
   return (

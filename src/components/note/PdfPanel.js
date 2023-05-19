@@ -102,7 +102,6 @@ const PdfPanel = ({ layout }) => {
    *
    **/
   const onDocumentLoadSuccess = ({ numPages }) => {
-    console.log(numPages, 123);
     setNumPages(numPages);
   };
 
@@ -197,8 +196,6 @@ const PdfPanel = ({ layout }) => {
     const { width, height } = getRectangleSize(origin, rectEnd);
 
     if (!width) {
-      console.log(111);
-
       setOrigin({ x: 0, y: 0 });
       setRectEnd({ x: 0, y: 0 });
       return false;
@@ -207,7 +204,6 @@ const PdfPanel = ({ layout }) => {
     const ctx = canvasPdf.current.getContext("2d");
     const overlayCtx = overlay.current.getContext("2d");
 
-    console.log(scale);
     // 指定した範囲の画像を取得
     const targetImage = ctx.getImageData(
       origin.x * scale,
@@ -215,8 +211,6 @@ const PdfPanel = ({ layout }) => {
       width * scale,
       height * scale
     );
-    console.log(x, y, canvasPdf, origin);
-    console.log(targetImage, overlay.current.width, overlay.current.height);
 
     // 画像認識させる
     const result = await recognizeCropImageToText(targetImage);
@@ -228,7 +222,6 @@ const PdfPanel = ({ layout }) => {
     setRectEnd({ x: 0, y: 0 });
 
     //ちゃんと取れているか結果表示
-    console.log(result);
   };
 
   return (

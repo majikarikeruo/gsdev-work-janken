@@ -91,7 +91,6 @@ const AudioPanel = () => {
     const currentTime = audioRef.current.currentTime;
     const currentMinutes = Math.floor(currentTime / 60);
     const currentSeconds = String(Math.floor(currentTime % 60));
-
     setCurrentTime(`${currentMinutes}:${currentSeconds.padStart(2, "0")}`);
   };
 

@@ -6,7 +6,13 @@ import { useEffect, useState, useMemo } from "react";
 /**
  * Mantine
  */
-import { Modal, Button, ActionIcon, createStyles } from "@mantine/core";
+import {
+  Modal,
+  Button,
+  ActionIcon,
+  createStyles,
+  ScrollArea,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 /**
@@ -21,8 +27,8 @@ import Layout from "@/components/layout";
 import SubHeader from "@/components/note/subheader";
 import Youtube from "@/components/note/youtube";
 import AudioPanel from "@/components/note/AudioPanel";
-import CanvasPanel from "@/components/note/CanvasPanel";
-import PdfPanel from "@/components/note/PdfPanel";
+import Canvas from "@/components/note/Canvas";
+import Pdf from "@/components/note/pdf";
 import Listening from "@/components/note/Listening";
 
 const useStyles = createStyles((theme) => ({
@@ -53,10 +59,9 @@ const Note = ({}) => {
       {layout === 1 && (
         <>
           <Youtube className="w-full" />
-
-          <div className="h-[calc(100vh_-_554px)] overflow-y-scroll overflow-x-hidden">
-            <CanvasPanel className="h-full grid-item" />
-          </div>
+          <ScrollArea h="calc(100vh_-_184px">
+            <Canvas className="h-full grid-item" />
+          </ScrollArea>
         </>
       )}
 
@@ -64,7 +69,7 @@ const Note = ({}) => {
       {layout === 2 && (
         <div className="relative">
           <div className="h-[calc(100vh_-_184px)] overflow-y-scroll">
-            <PdfPanel layout={layout} />
+            <Pdf layout={layout} />
           </div>
 
           <Modal
@@ -78,7 +83,7 @@ const Note = ({}) => {
             }}
           >
             <div className="h-[calc(100vh_-_3rem)] overflow-y-hidden overflow-x-hidden">
-              <CanvasPanel />
+              <Canvas />
             </div>
           </Modal>
 
@@ -100,7 +105,7 @@ const Note = ({}) => {
       {/* 音声認識 */}
       {layout === 3 && (
         <>
-          <PdfPanel layout={layout} />
+          <Pdf layout={layout} />
           <Listening />
         </>
       )}
@@ -108,7 +113,7 @@ const Note = ({}) => {
       {/* ノートに集中 */}
       {layout === 4 && (
         <>
-          <CanvasPanel />
+          <Canvas />
         </>
       )}
       <AudioPanel className="" />

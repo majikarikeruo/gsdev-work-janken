@@ -4,25 +4,27 @@ import { useEffect, useState, useRef } from "react";
 /** library */
 import { paper, Path, Tool, Group, CompoundPath } from "paper";
 
-import { offsetUtils } from "@/components/note/CanvasPanel/Utils/offsetUtils";
+import { offsetUtils } from "@/components/note/Canvas/utils/offsetUtils";
 
-const eraseArgs = {
-  size: 40,
-  strokeCap: "round",
-  strokeJoin: "round",
-  strokeColor: "white",
-  name: "erase",
-};
+import { IconCircleFilled } from "@tabler/icons-react";
 
 const deleteTargetType = ["Group", "Shape", "Raster"];
 
-const EraseTool = ({ canvas }) => {
+const EraseTool = ({ eraseWidth }) => {
   const erasePointer = useRef(null);
 
   const [erasePath, setErasePath] = useState(null);
   const [tmpGroup, setTmpGroup] = useState(null);
   const [mask, setMask] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
+
+  const eraseArgs = {
+    size: eraseWidth,
+    strokeCap: "round",
+    strokeJoin: "round",
+    strokeColor: "white",
+    name: "Erase",
+  };
 
   /**
    * @function strokeRatio
@@ -61,14 +63,6 @@ const EraseTool = ({ canvas }) => {
     const { size, strokeCap, strokeJoin, strokeColor } = eraseArgs;
     const strokeWidth = (size * paper.view.pixelRatio) / strokeRatio;
     setIsDrawing(true);
-    console.log(
-      paper.project,
-      paper.project.layers[0],
-      size,
-      strokeCap,
-      strokeJoin,
-      strokeColor
-    );
 
     if (!paper.project.layers.length) {
       return false;
@@ -76,29 +70,26 @@ const EraseTool = ({ canvas }) => {
 
     const copiedActiveLayerChildren = paper.project.layers[0].removeChildren();
 
-    setErasePath(
-      new Path({
-        strokeWidth,
-        strokeCap,
-        strokeJoin,
-        strokeColor,
-      })
-    );
+    const newTempGroup = new Group({
+      children: copiedActiveLayerChildren,
+      blendMode: "source-out",
+    });
+    setTmpGroup(newTempGroup);
 
-    setTmpGroup(
-      new Group({
-        children: copiedActiveLayerChildren,
-        blendMode: "source-out",
-      })
-    );
-    console.log(tmpGroup);
+    const newMask = new Group({
+      children: [erasePath, tmpGroup],
+      blendMode: "source-over",
+    });
+    setMask(newMask);
 
-    setMask(
-      new Group({
-        children: [erasePath, tmpGroup],
-        blendMode: "source-over",
-      })
-    );
+    const newErasePath = new Path({
+      strokeWidth,
+      strokeCap,
+      strokeJoin,
+      strokeColor,
+    });
+    setErasePath(newErasePath);
+    newErasePath.add(e.point);
   };
 
   /**
@@ -125,7 +116,6 @@ const EraseTool = ({ canvas }) => {
 
       erasePath.simplify();
       setIsDrawing(false);
-      // this._setErasePointerPos(null, null);
 
       const outerPath = offsetUtils().offsetPath(erasePath, eraseRadius());
       const innerPath = offsetUtils().offsetPath(erasePath, -eraseRadius());
@@ -189,23 +179,22 @@ const EraseTool = ({ canvas }) => {
     }
   };
 
-  useEffect(() => {
-    const eraseTool = new Tool({ name: "Erase" });
+  const eraseTool = new Tool({ name: "Erase" });
 
-    eraseTool.on("mousedown", (e) => drawStart(e));
-    eraseTool.on("mousedrag", (e) => drawing(e));
-    eraseTool.on("mouseup", (e) => drawEnd(e));
-
-    return () => eraseTool.remove();
-  }, [erasePath]);
+  eraseTool.on("mousedown", (e) => drawStart(e));
+  eraseTool.on("mousedrag", (e) => drawing(e));
+  eraseTool.on("mouseup", (e) => drawEnd(e));
+  eraseTool.activate();
 
   return (
     <>
       {isDrawing && (
-        <div
-          className={`block w-20 h-20 rounded-full bg-white border-1 border-gray-100 border-solid absolute`}
+        <IconCircleFilled
           ref={erasePointer}
-        ></div>
+          size={eraseWidth}
+          fill="white"
+          className="absolute"
+        />
       )}
     </>
   );

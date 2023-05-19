@@ -9,6 +9,7 @@ import {
   Drawer,
   Button,
   Divider,
+  ActionIcon,
   NavLink,
 } from "@mantine/core";
 
@@ -21,6 +22,10 @@ import {
   IconLayoutSidebarLeftExpand,
   IconChevronLeft,
   IconChevronRight,
+  IconBrandYoutube,
+  IconNotebook,
+  IconWriting,
+  IconMessages,
 } from "@tabler/icons-react";
 
 const SubHeader = ({ changeLayout }) => {
@@ -76,17 +81,55 @@ const SubHeader = ({ changeLayout }) => {
       </Button>
 
       <Group>
-        <Text>Layout Mode</Text>
-        <Select
-          onChange={changeLayout}
-          defaultValue={1}
-          data={[
-            { value: 1, label: "動画学習" },
-            { value: 2, label: "教科書学習" },
-            { value: 3, label: "シャドーイング" },
-            { value: 4, label: "ノートに集中" },
-          ]}
-        />
+        <Group>
+          <ActionIcon
+            color="dark"
+            size="xl"
+            radius="xl"
+            variant="filled"
+            className="flex flex-col"
+            onClick={(e) => changeLayout(1)}
+          >
+            <IconBrandYoutube size="2rem" />
+            <span className="inline-block mt-1 text-[10px]">動画</span>
+          </ActionIcon>
+
+          <ActionIcon
+            color="dark"
+            size="xl"
+            radius="xl"
+            variant="filled"
+            className="flex flex-col"
+            onClick={(e) => changeLayout(2)}
+          >
+            <IconNotebook size="2rem" />
+            <span className="inline-block mt-1 text-[10px]">テキスト</span>
+          </ActionIcon>
+
+          <ActionIcon
+            color="dark"
+            size="xl"
+            radius="xl"
+            variant="filled"
+            className="flex flex-col"
+            onClick={(e) => changeLayout(3)}
+          >
+            <IconMessages size="2rem" />
+            <span className="inline-block mt-1 text-[10px]">発声</span>
+          </ActionIcon>
+
+          <ActionIcon
+            color="dark"
+            size="xl"
+            radius="xl"
+            variant="filled"
+            className="flex flex-col"
+            onClick={(e) => changeLayout(4)}
+          >
+            <IconWriting size="2rem" />
+            <span className="inline-block mt-1 text-[10px]">ノート</span>
+          </ActionIcon>
+        </Group>
       </Group>
     </Flex>
   );
